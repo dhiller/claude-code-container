@@ -27,15 +27,9 @@ if [ -n "$GH_TOKEN" ]; then
     echo "GitHub CLI: token configured"
 fi
 
-# ── gopls MCP server ──
+# ── gopls ──
 if command -v gopls &>/dev/null; then
-    if [ ! -f "$HOME/.claude.json" ]; then
-        echo '{}' > "$HOME/.claude.json"
-    fi
-    if ! claude mcp get gopls &>/dev/null 2>&1; then
-        claude mcp add --scope user --transport stdio gopls -- gopls mcp 2>/dev/null || true
-        echo "gopls MCP: registered"
-    fi
+    echo "gopls: available (plugin: gopls-lsp@claude-plugins-official)"
 fi
 
 echo "──────────────────────────────────────"

@@ -73,7 +73,12 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Directories
 RUN mkdir -p /workspace /home/${USER_NAME}/.claude /home/${USER_NAME}/.ssh \
       /home/${USER_NAME}/go && \
+    echo '{"hasCompletedOnboarding":true,"projects":{"/workspace":{"hasTrustDialogAccepted":true,"allowedTools":[]}}}' > /home/${USER_NAME}/.claude.json && \
     chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME} /workspace
+
+# Symlink host path so git hooks with absolute paths resolve correctly
+RUN mkdir -p /home/dhiller/Projects && \
+    ln -s /workspace /home/dhiller/Projects/github.com
 
 ENV DEVCONTAINER=true
 ENV DISABLE_AUTOUPDATER=1

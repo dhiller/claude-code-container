@@ -1,5 +1,9 @@
 {
   "model": "claude-opus-4-6",
+  "theme": "auto",
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true
+  },
   "permissions": {
     "allow": [
       "Read(**)",
