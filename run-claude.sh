@@ -50,6 +50,7 @@ exec podman run --rm -it \
     -e "CLOUD_ML_REGION" \
     -e "GH_TOKEN=${GH_TOKEN}" \
     -e "TERM=${TERM:-xterm-256color}" \
+    -e "KUBECONFIG=${KUBECONFIG:+/home/claude/.kube/$(basename "$KUBECONFIG")}" \
     \
     -v "${WORKSPACE}:/workspace:Z" \
     --mount "type=tmpfs,destination=/workspace/kubevirt.io/secrets" \
@@ -57,6 +58,7 @@ exec podman run --rm -it \
     -v "${HOME}/.gitconfig:/home/claude/.gitconfig:ro,Z" \
     -v "${HOME}/.ssh/known_hosts:/home/claude/.ssh/known_hosts:ro,Z" \
     -v "${HOME}/.config/gcloud:/home/claude/.config/gcloud:ro,Z" \
+    -v "${HOME}/.kube:/home/claude/.kube:ro,Z" \
     \
     "${SSH_MOUNT[@]}" \
     \

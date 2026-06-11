@@ -58,9 +58,9 @@ ENV GOROOT=/usr/local/go
 ENV GOPATH=/home/${USER_NAME}/go
 ENV PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 
-# Claude Code
+# Claude Code and MCP servers
 ENV WORKDIR=/workspace
-RUN npm install -g @anthropic-ai/claude-code
+RUN npm install -g @anthropic-ai/claude-code kubernetes-mcp-server
 
 # Managed settings — enforced read-allow/write-ask permission policy
 RUN mkdir -p /etc/claude-code
