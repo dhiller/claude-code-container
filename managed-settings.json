@@ -70,8 +70,8 @@
       "Bash(go env *)",
       "Bash(go env)",
       "Bash(gopls *)",
-      "Bash(golangci-lint version *)",
-      "Bash(golangci-lint version)",
+      "Bash(golangci-lint *)",
+      "Bash(goimports *)",
 
       "Bash(gh pr view *)",
       "Bash(gh pr list *)",
