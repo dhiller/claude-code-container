@@ -65,6 +65,13 @@ ENV PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 ENV WORKDIR=/workspace
 RUN npm install -g @anthropic-ai/claude-code kubernetes-mcp-server
 
+# Readonly gate hook — auto-approves read-only tool calls, defers writes
+RUN git clone --depth 1 https://github.com/DavidTeju/shared-skills.git /tmp/shared-skills && \
+    mkdir -p /usr/local/share/claude-code/hooks && \
+    cp /tmp/shared-skills/hooks/user-level/readonly-gate.sh /usr/local/share/claude-code/hooks/ && \
+    chmod +x /usr/local/share/claude-code/hooks/readonly-gate.sh && \
+    rm -rf /tmp/shared-skills
+
 # Managed settings — enforced read-allow/write-ask permission policy
 RUN mkdir -p /etc/claude-code
 COPY managed-settings.json /etc/claude-code/managed-settings.json
