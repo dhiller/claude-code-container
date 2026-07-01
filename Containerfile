@@ -5,14 +5,15 @@ FROM docker.io/library/golang:1.26-bookworm AS go-tools
 
 RUN go install golang.org/x/tools/gopls@latest && \
     go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest && \
-    go install golang.org/x/tools/cmd/goimports@latest
+    go install golang.org/x/tools/cmd/goimports@latest && \
+    go install mvdan.cc/sh/v3/cmd/shfmt@latest
 
 # =============================================================================
 # Stage 2: Runtime — Node.js + Go + Claude Code + system packages
 # =============================================================================
 FROM docker.io/library/node:22-bookworm
 
-ARG GO_VERSION=1.24.4
+ARG GO_VERSION=1.26.4
 ARG USER_NAME=claude
 ARG USER_UID=1000
 ARG USER_GID=1000
@@ -27,6 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jq \
     vim \
     ripgrep \
+    shellcheck \
     curl \
     ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -47,6 +49,7 @@ RUN curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" \
 COPY --from=go-tools /go/bin/gopls /usr/local/bin/
 COPY --from=go-tools /go/bin/golangci-lint /usr/local/bin/
 COPY --from=go-tools /go/bin/goimports /usr/local/bin/
+COPY --from=go-tools /go/bin/shfmt /usr/local/bin/
 
 # Non-root user matching host UID/GID
 RUN userdel -r node 2>/dev/null || true && \

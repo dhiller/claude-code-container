@@ -1,8 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-IMAGE_NAME="claude-code-kubevirt"
-IMAGE_TAG="latest"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/defaults.sh"
+
 WORKSPACE="${CLAUDE_WORKSPACE:-${HOME}/Projects/github.com}"
 
 # ── Vertex AI auth ──
@@ -62,7 +63,7 @@ exec podman run --rm -it \
     \
     "${SSH_MOUNT[@]}" \
     \
-    -v "claude-code-config:/home/claude/.claude" \
+    -v "${HOME}/.claude-container:/home/claude/.claude:Z" \
     -v "go-module-cache:/home/claude/go" \
     \
-    "${IMAGE_NAME}:${IMAGE_TAG}" "$@"
+    "${FULL_IMAGE_PATH}" "$@"

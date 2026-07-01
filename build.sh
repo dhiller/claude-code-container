@@ -2,14 +2,13 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-IMAGE_NAME="claude-code-kubevirt"
-IMAGE_TAG="latest"
+source "${SCRIPT_DIR}/defaults.sh"
 
-echo "Building ${IMAGE_NAME}:${IMAGE_TAG}..."
+echo "Building ${FULL_IMAGE_PATH}..."
 
 podman build \
-    --tag "${IMAGE_NAME}:${IMAGE_TAG}" \
-    --build-arg GO_VERSION=1.24.4 \
+    --tag "${FULL_IMAGE_PATH}" \
+    --build-arg "GO_VERSION=${GIMME_GO_VERSION}" \
     --build-arg USER_UID="$(id -u)" \
     --build-arg USER_GID="$(id -g)" \
     -f "${SCRIPT_DIR}/Containerfile" \
@@ -17,7 +16,7 @@ podman build \
 
 echo ""
 echo "Build complete."
-podman images "${IMAGE_NAME}:${IMAGE_TAG}" --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}'
+podman images "${FULL_IMAGE_PATH}" --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}'
 echo ""
 echo "Run with:"
 echo "  export CLAUDE_GCP_PROJECT_ID=itpc-gcp-hcm-pe-eng-claude"
