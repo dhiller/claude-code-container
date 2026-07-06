@@ -19,7 +19,6 @@
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0"
   },
-  "model": "claude-opus-4-6",
   "theme": "auto",
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true
