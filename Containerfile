@@ -65,6 +65,9 @@ ENV PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 ENV WORKDIR=/workspace
 RUN npm install -g @anthropic-ai/claude-code kubernetes-mcp-server
 
+RUN claude plugin marketplace add onsi/ginkgo && \
+    claude plugin install ginkgo@ginkgo
+
 # Readonly gate hook — auto-approves read-only tool calls, defers writes
 RUN git clone --depth 1 https://github.com/DavidTeju/shared-skills.git /tmp/shared-skills && \
     mkdir -p /usr/local/share/claude-code/hooks && \
