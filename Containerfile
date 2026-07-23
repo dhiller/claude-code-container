@@ -6,7 +6,15 @@ FROM docker.io/library/golang:1.26-bookworm AS go-tools
 RUN go install golang.org/x/tools/gopls@latest && \
     go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest && \
     go install golang.org/x/tools/cmd/goimports@latest && \
-    go install mvdan.cc/sh/v3/cmd/shfmt@latest
+    go install mvdan.cc/sh/v3/cmd/shfmt@latest && \
+    go install github.com/mikefarah/yq/v4@latest
+
+# ci-failures: go install fails because the repo contains data files with ':'
+# in their paths (ISO timestamps), which the Go module zip format rejects.
+RUN git clone --depth 1 https://github.com/kubevirt/ci-health.git /tmp/ci-health && \
+    cd /tmp/ci-health && \
+    go build -o /go/bin/ci-failures ./cmd/ci-failures/ && \
+    rm -rf /tmp/ci-health
 
 # =============================================================================
 # Stage 2: Runtime — Node.js + Go + Claude Code + system packages
@@ -29,8 +37,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     ripgrep \
     shellcheck \
+    skopeo \
     curl \
     ca-certificates \
+    yamllint \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # GitHub CLI — install from official repo
@@ -50,6 +60,8 @@ COPY --from=go-tools /go/bin/gopls /usr/local/bin/
 COPY --from=go-tools /go/bin/golangci-lint /usr/local/bin/
 COPY --from=go-tools /go/bin/goimports /usr/local/bin/
 COPY --from=go-tools /go/bin/shfmt /usr/local/bin/
+COPY --from=go-tools /go/bin/yq /usr/local/bin/
+COPY --from=go-tools /go/bin/ci-failures /usr/local/bin/
 
 # Non-root user matching host UID/GID
 RUN userdel -r node 2>/dev/null || true && \
@@ -98,6 +110,7 @@ ENV DISABLE_AUTOUPDATER=1
 ENV CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV TERM=xterm-256color
+ENV COLORTERM=truecolor
 
 WORKDIR /workspace
 USER ${USER_NAME}

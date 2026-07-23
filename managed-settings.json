@@ -26,6 +26,7 @@
   "permissions": {
     "allow": [
       "Read(**)",
+      "Edit(/tmp/**)",
 
       "Bash(ls *)",
       "Bash(ls)",
@@ -91,6 +92,7 @@
       "Bash(gopls *)",
       "Bash(golangci-lint *)",
       "Bash(goimports *)",
+      "Bash(yamllint *)",
 
       "Bash(gh pr view *)",
       "Bash(gh pr list *)",
@@ -105,6 +107,9 @@
       "Bash(gh search *)",
       "Bash(gh run view *)",
       "Bash(gh run list *)",
+
+      "Bash(skopeo inspect *)",
+      "Bash(skopeo list-tags *)",
 
       "WebSearch",
       "WebFetch(domain:github.com)",
