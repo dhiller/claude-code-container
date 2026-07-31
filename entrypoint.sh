@@ -24,7 +24,12 @@ fi
 
 # ── GitHub CLI ──
 if [ -n "$GH_TOKEN" ]; then
-    echo "GitHub CLI: token configured"
+    GH_USER=$(gh api user --jq .login 2>/dev/null) || GH_USER=""
+    if [ -n "$GH_USER" ]; then
+        echo "GitHub CLI: authenticated as ${GH_USER}"
+    else
+        echo "GitHub CLI: token configured (could not resolve username)"
+    fi
 fi
 
 # ── gopls ──
