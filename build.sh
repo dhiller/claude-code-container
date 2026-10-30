@@ -3,12 +3,13 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/defaults.sh"
+source "${SCRIPT_DIR}/defaults-kilo.sh"
 
 echo "Building ${FULL_IMAGE_PATH}..."
 
 podman build \
     --tag "${FULL_IMAGE_PATH}" \
-    --build-arg "GO_VERSION=${GIMME_GO_VERSION}" \
+    --build-arg "GO_VERSION=${GO_VERSION}" \
     --build-arg USER_UID="$(id -u)" \
     --build-arg USER_GID="$(id -g)" \
     -f "${SCRIPT_DIR}/Containerfile" \
