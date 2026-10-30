@@ -1,7 +1,8 @@
 # =============================================================================
 # Stage 1: Build Go development tools
 # =============================================================================
-FROM docker.io/library/golang:1.26-bookworm AS go-tools
+ARG GO_VERSION
+FROM docker.io/library/golang:${GO_VERSION}-bookworm AS go-tools
 
 RUN go install golang.org/x/tools/gopls@latest && \
     go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest && \
@@ -21,7 +22,7 @@ RUN git clone --depth 1 https://github.com/kubevirt/ci-health.git /tmp/ci-health
 # =============================================================================
 FROM docker.io/library/node:22-bookworm
 
-ARG GO_VERSION=1.26.4
+ARG GO_VERSION
 ARG USER_NAME=claude
 ARG USER_UID=1000
 ARG USER_GID=1000
